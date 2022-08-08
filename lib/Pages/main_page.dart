@@ -9,8 +9,7 @@ import 'package:provider/provider.dart';
 class MainPage extends StatelessWidget{
     const MainPage({Key? key}) :super(key:key);
 
- final String _notify = 'notification';
- final String coinData = 'coin data';
+ final String coinData = 'Coin Data';
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +19,7 @@ class MainPage extends StatelessWidget{
       children: [
        Padding(
          padding: const EdgeInsets.symmetric(horizontal: 100),
-         child: ButtonMain(title: _notify),
+         child: ButtonMainWithNotificationIcon(),
        ),
           const SizedBox(height: 10,),
        Padding(
@@ -30,7 +29,7 @@ class MainPage extends StatelessWidget{
           const SizedBox(height: 10),
        Padding(
          padding: const EdgeInsets.symmetric(horizontal: 100),
-         child: ButtonMainWithIcon(),
+         child: ButtonMainWithDarkIcon(),
        ),
       ],
       )
@@ -41,8 +40,8 @@ class MainPage extends StatelessWidget{
 
 //after main
 
-class ButtonMainWithIcon extends StatelessWidget with _Colors, _PaddingUtility {
-   ButtonMainWithIcon({
+class ButtonMainWithDarkIcon extends StatelessWidget with _Colors, _PaddingUtility {
+   ButtonMainWithDarkIcon({
     Key? key, 
   }) : super(key: key);
 
@@ -62,6 +61,25 @@ class ButtonMainWithIcon extends StatelessWidget with _Colors, _PaddingUtility {
   }
 }
 
+class ButtonMainWithNotificationIcon extends StatelessWidget with _Colors, _PaddingUtility {
+   ButtonMainWithNotificationIcon({
+    Key? key, 
+  }) : super(key: key);
+
+ @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+        style: ElevatedButton.styleFrom(primary: blackColor,shape: const StadiumBorder()),
+        onPressed:(){
+          Get.snackbar("Hello Gus", "You're now online");
+        },
+        child: Padding(
+          padding: iconPadding,
+          child: const SizedBox(width: 170, child: Center(child: Icon(Icons.notifications_none)),
+        ))
+       );
+  }
+}
 
 class ButtonMain extends StatelessWidget with _Colors, _PaddingUtility {
    ButtonMain({
@@ -77,15 +95,10 @@ class ButtonMain extends StatelessWidget with _Colors, _PaddingUtility {
      style: ElevatedButton.styleFrom(primary: blackColor, shape: const StadiumBorder()),
      onPressed:(){
       //navigation to coin page
-      if(title == 'coin data'){
+      if(title == 'Coin Data'){
         Navigator.of(context).push(MaterialPageRoute(builder: (context){
           return const CoinDataPage();
         }));
-      }
-      //notification
-      if(title == 'notification'){
-        Get.snackbar("Hello Gus", "You're now online");
-        
       }
      },
 

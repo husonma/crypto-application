@@ -12,7 +12,7 @@ void main() {
     MultiProvider(providers: [
       ChangeNotifierProvider<ThemeNotifier>(create: (context)=> ThemeNotifier())
     ],
-    builder: (context, child)=> MyApp(),
+    builder: (context, child)=> const MyApp(),
     ),
   );
 }
@@ -25,6 +25,7 @@ class MyApp extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
       return GetMaterialApp(
+        debugShowCheckedModeBanner: false,
         darkTheme: ThemeData.dark(),
         theme: context.watch<ThemeNotifier>().currentTheme,
         home:const MainPage(),
