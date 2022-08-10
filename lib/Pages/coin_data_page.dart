@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/API/data.dart';
 import 'package:flutter_application_1/Pages/main_page.dart';
@@ -7,19 +8,42 @@ import 'package:get/get.dart';
 import '../Api/data_controller.dart';
 
 
-class CoinDataPage extends StatelessWidget {
+class CoinDataPage extends StatefulWidget {
   const CoinDataPage({Key? key}) : super(key: key);
+
+  @override
+  State<CoinDataPage> createState() => _CoinDataPageState();
+}
+
+class _CoinDataPageState extends State<CoinDataPage> {
+  final DataController controller = Get.put(DataController());
+  void updateList(String value){
+    setState(() {
+      controller.currencyList = controller.currencyList.where((element) => element.id.toLowerCase().contains(value.toLowerCase())).toList();
+    });
+  }
+  
   @override
   Widget build(BuildContext context) {
-    final DataController controller = Get.put(DataController());
-    return Scaffold(
+    
+    return Obx((() => Scaffold(
+      appBar: AppBar(
+        title: TextField(
+          onChanged: (value) =>  updateList(value),
+          decoration: const InputDecoration(
+            filled: true,
+            hintText: "Search",
+            suffixIcon: Icon(Icons.search),
+            )
+          ),
+        ),
       body: Padding(
         padding: const EdgeInsets.all(12),
         child: ListView.builder(
             itemCount: controller.currencyList.length,
             itemBuilder: (_, index) => Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 0, 25),
-            child: DataView(index: index, list: controller.currencyList),
+            child: DataView(index: index, data: controller.currencyList),
         ),
         ),
       ),
@@ -33,7 +57,7 @@ class CoinDataPage extends StatelessWidget {
      child: Icon(Icons.keyboard_backspace_outlined, color: Colors.black, size: 35,),
      ),
      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-    );
+    )));
   }
 }
 
@@ -43,11 +67,11 @@ class CoinDataPage extends StatelessWidget {
 
 
 class DataView extends StatelessWidget {
-  const DataView({Key? key, required this.index, required this.list,}) : super(key: key);
+  const DataView({Key? key, required this.index, required this.data,}) : super(key: key);
 
   final int index;
-  final List<CoinList> list;
-  
+  final List<CoinList> data;
+
   @override
   Widget build(BuildContext context) {
     return Obx(
@@ -63,13 +87,13 @@ class DataView extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 30,
-                  child: list[index].logoUrl.endsWith("svg")
+                  child: data[index].logoUrl.endsWith("svg")
                         ? SvgPicture.network(
-                            list[index].logoUrl,
+                            data[index].logoUrl,
                             fit: BoxFit.fill,
                           ) :
                           Image.network(
-                            list[index].logoUrl,
+                            data[index].logoUrl,
                             fit: BoxFit.fill,
                           )
                 )
@@ -81,8 +105,8 @@ class DataView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(list[index].id),
-                Text("${list[index].rank}.${list[index].id}"),
+                Text(data[index].id),
+                Text("${data[index].rank}.${data[index].id}"),
               ],
             )
           ),
@@ -92,8 +116,8 @@ class DataView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text("\$${_price(list[index].price)}"),
-                Text("\$${_milionBilion(list[index].marketCap)}"),
+                Text("\$${_price(data[index].price)}"),
+                Text("\$${_milionBilion(data[index].marketCap)}"),
               ],
             )
           ),
@@ -107,19 +131,19 @@ class DataView extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
-                      list[index].the1D.priceChangePct.contains("-") ? Icons.arrow_downward : Icons.arrow_upward,
-                      color: list[index].the1D.priceChangePct.contains("-") ? Colors.red : Colors.green,
+                      data[index].the1D.priceChangePct.contains("-") ? Icons.arrow_downward : Icons.arrow_upward,
+                      color: data[index].the1D.priceChangePct.contains("-") ? Colors.red : Colors.green,
                     ),
                     Text(
-                        list[index].the1D.priceChangePct.contains("-") ? ("\$${list[index].the1D.priceChangePct}") :  ("\$${list[index].the1D.priceChangePct}"),
+                        data[index].the1D.priceChangePct.contains("-") ? ("\$${data[index].the1D.priceChangePct}") :  ("\$${data[index].the1D.priceChangePct}"),
                         style: TextStyle(
-                          color: list[index].the1D.priceChangePct.contains("-") ? Colors.red : Colors.green,
+                          color: data[index].the1D.priceChangePct.contains("-") ? Colors.red : Colors.green,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                   ],
                 ),
-                Text("\$${_milionBilion(list[index].the1D.volume)}"),
+                Text("\$${(data[index].the1D.volume)}"),
               ],
             ),
             )
@@ -132,7 +156,7 @@ class DataView extends StatelessWidget {
 }
 
 
-//data handle
+//data number handle
 
 _milionBilion(String marketcap){
     String newMarketcap;
@@ -150,3 +174,4 @@ _price(String price){
   newPrice = double.parse(price).toStringAsFixed(3);
   return newPrice;
 }
+

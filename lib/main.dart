@@ -10,7 +10,7 @@ import 'Pages/main_page.dart';
 void main() {
   runApp(
     MultiProvider(providers: [
-      ChangeNotifierProvider<ThemeNotifier>(create: (context)=> ThemeNotifier())
+      ChangeNotifierProvider<ThemeNotifier>(create: (context)=> ThemeNotifier()),
     ],
     builder: (context, child)=> const MyApp(),
     ),
