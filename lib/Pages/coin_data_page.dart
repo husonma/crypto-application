@@ -5,7 +5,7 @@ import 'package:flutter_application_1/Pages/main_page.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
-import '../Api/data_controller.dart';
+import '../controllers/data_controller.dart';
 
 
 class CoinDataPage extends StatefulWidget {
@@ -17,19 +17,13 @@ class CoinDataPage extends StatefulWidget {
 
 class _CoinDataPageState extends State<CoinDataPage> {
   final DataController controller = Get.put(DataController());
-  void updateList(String value){
-    setState(() {
-      controller.currencyList = controller.currencyList.where((element) => element.id.toLowerCase().contains(value.toLowerCase())).toList();
-    });
-  }
-  
   @override
   Widget build(BuildContext context) {
     
     return Obx((() => Scaffold(
       appBar: AppBar(
         title: TextField(
-          onChanged: (value) =>  updateList(value),
+          onChanged: (value) =>  controller.filterCoin(value),
           decoration: const InputDecoration(
             filled: true,
             hintText: "Search",
@@ -40,10 +34,10 @@ class _CoinDataPageState extends State<CoinDataPage> {
       body: Padding(
         padding: const EdgeInsets.all(12),
         child: ListView.builder(
-            itemCount: controller.currencyList.length,
+            itemCount: controller.foundcoins.value.length,
             itemBuilder: (_, index) => Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 0, 25),
-            child: DataView(index: index, data: controller.currencyList),
+            child: DataView(index: index, data: controller.foundcoins.value),
         ),
         ),
       ),

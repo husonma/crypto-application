@@ -22,7 +22,7 @@ class CoinList {
   late String name;
   late String logoUrl;
   late String price;
-  late String marketCap;
+  late String  marketCap;
   late String rank;
   late The1D the1D;
   
